@@ -8,10 +8,16 @@ from threading import Thread
 import requests
 import datetime
 from datetime import datetime
+import configparser
+import telebot
 
+config = configparser.ConfigParser()
+config.read("config.ini", encoding="utf-8")
+bot_api = config['Telegram']['bot_api']
+openai_api = config['OpenAI']['ai_api']
+bot = telebot.TeleBot(bot_api)
+openai.api_key = openai_api
 
-bot = telebot.TeleBot("key")
-openai.api_key = "key"
 print("Бот начал свою работу! Для работы с ИИ: Toma - ваше сообщение")
 print("Что бы приостановить работу нажмите на клавиатуре [CTRL] + [C]")
 
