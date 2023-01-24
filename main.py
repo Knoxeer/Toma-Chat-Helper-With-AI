@@ -18,20 +18,9 @@ openai_api = config['OpenAI']['ai_api']
 bot = telebot.TeleBot(bot_api)
 openai.api_key = openai_api
 
-print("Бот начал свою работу! Для работы с ИИ: Toma - ваше сообщение")
-print("Что бы приостановить работу нажмите на клавиатуре [CTRL] + [C]")
-
-@bot.message_handler(commands=['start'])
-def start_message(message):
-    bot.send_message(message.chat.id, 'Узнайте свой ID при помощи команды /id и отправьте его @yar337 После чего вы сможете использовать бота')
-
-@bot.message_handler(commands=['id'])
-def get_chatid(message):
-    bot.send_message(message.chat.id,f"ID данного чата: {message.chat.id}")
-
 @bot.message_handler(content_types=['text'])
 def lalala(message):
-    print(f'Имя: {message.from_user.first_name}Логин: {message.from_user.username} id: {message.from_user.id} Написал: {message.text}')
+    print(f'Имя: {message.from_user.first_name}Логин: {message.from_user.username} UserID: {message.from_user.id} Написал: {message.text} ChatID: {message.chat.id}')
     id = (-1001895899920, -1001341272726, -1001534946044)
     for id in id:
         if "Toma" in message.text or "toma" in message.text or "скайнет" in message.text or "Скайнет" in message.text or "ботинок" in message.text or "Ботинок" in message.text or "Тома" in message.text or "тома" in message.text:
