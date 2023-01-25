@@ -11,7 +11,7 @@ weekdays = ["Понеделник", "Вторник", "Среда", "Четве�
 now = datetime.now()
 current_day = weekdays[now.weekday()]
 def send_msg(message): # ДР + Пары
-    ids = (-1001895899920, -1001341272726)
+    ids = (-1001895899920, -1001341272726, -1001534946044)
     for id in ids:
         bot.send_message(id, message)
 @bot.message_handler(content_types=['text'])
@@ -43,7 +43,6 @@ def lalala(message):
             bot.send_message(message.chat.id, response)
         elif message.text.lower() in ('я тебя люблю', 'ты моя любовь', 'это секс', 'секс', 'это любовь'):
             bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEBm9pjxoJdN99yNA3oUGIpjP7EH3S2TgACTgIAAladvQow_mttgTIDby0E')
-
 
         if any(x in message.text for x in # намнного лучше работает, чем if message.text.lower()
                ("Она отмечала?", "Уже отмечала?", "Она отмечает?", "А она уже отметила?", "отмечала?", "Уже отмечала?", "отмечает?")):
@@ -90,6 +89,11 @@ def lalala(message):
             bot.send_message(message.chat.id, codecs.open('prepods.txt', "r", "utf_8_sig").read())
         if message.text.lower() in ('группа', 'список учеников', 'список'):
             bot.send_message(message.chat.id, codecs.open('students.txt', "r", "utf_8_sig").read())
+        if message.text.lower() in ('орков', 'статистика', 'мертвых орков', 'сколько мертвых орков?'):
+            r = requests.get('https://www.pravda.com.ua/rus/')
+            soup = BS(r.content, 'html.parser')
+            orks = soup.select('.war_num')[0].text
+            bot.send_message(message.chat.id,f"Мертвых орков уже: {orks}")
         return
 def happybirthday_bot():
     birthdays = {}
@@ -100,6 +104,12 @@ def happybirthday_bot():
     today = time.strftime('%d.%m')
     if today in birthdays:
         send_msg(f"[INFO] Сегодня день рождения:\n{birthdays[today]}")
+
+def dead_orks_bot():
+    r = requests.get('https://www.pravda.com.ua/rus/')
+    soup = BS(r.content, 'html.parser')
+    orks = soup.select('.war_num')[0].text
+    send_msg(f"Мертвых орков на сегодня:{orks}")
 def start_mooooooooooooooooooorning_bot():
     r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
