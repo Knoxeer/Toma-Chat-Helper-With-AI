@@ -6,6 +6,10 @@ config = configparser.ConfigParser();       config.read("settings.ini", encoding
 bot_api = config['Telegram']['bot_api'];    openai_api = config['OpenAI']['ai_api']
 bot = telebot.TeleBot(bot_api);             openai.api_key = openai_api
 id_chat_config = config['Telegram']['id_chat'];
+
+weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
+now = datetime.now()
+current_day = weekdays[now.weekday()]
 def send_msg(message): # ДР + Пары
     ids = (-1001895899920, -1001341272726)
     for id in ids:
@@ -81,11 +85,7 @@ def lalala(message):
                 vologist = html.find_all('td', 'cur')[5].text
                 now_temp = html.select_one('.imgBlock .today-temp').text.strip()
                 current_date = str(datetime.now().date())
-                weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
-                now = datetime.now()
-                current_day = weekdays[now.weekday()]
-                bot.send_message(message.chat.id,
-                                 f"Сейчас: {now_temp}, {current_day} \nВлажность: {vologist}% \nТемпература: " + t_min + ', ' + t_max + "\n---------------------------------------------------\n" + text + "\n\n🌥 " + day2 + " " + month2 + " | " + wday2 + "\n" + "💨Температура: " + t_min2 + " " + t_max2 + "\n" + "\n" + "🌥 " + day3 + " " + month3 + " | " + wday3 + "\n" + "💨Температура: " + t_min3 + " " + t_max3 + "\n" + "\n" + "🌥 " + day4 + " " + month4 + " | " + wday4 + "\n" + "💨Температура: " + t_min4 + " " + t_max4 + "\n" + "\n" + "🌥 " + day5 + " " + month5 + " | " + wday5 + "\n" + "💨Температура: " + t_min5 + " " + t_max5)
+                bot.send_message(message.chat.id,f"Сейчас: {now_temp}, {current_day} \nВлажность: {vologist}% \nТемпература: " + t_min + ', ' + t_max + "\n---------------------------------------------------\n" + text + "\n\n🌥 " + day2 + " " + month2 + " | " + wday2 + "\n" + "💨Температура: " + t_min2 + " " + t_max2 + "\n" + "\n" + "🌥 " + day3 + " " + month3 + " | " + wday3 + "\n" + "💨Температура: " + t_min3 + " " + t_max3 + "\n" + "\n" + "🌥 " + day4 + " " + month4 + " | " + wday4 + "\n" + "💨Температура: " + t_min4 + " " + t_max4 + "\n" + "\n" + "🌥 " + day5 + " " + month5 + " | " + wday5 + "\n" + "💨Температура: " + t_min5 + " " + t_max5)
 
         if message.text.lower() in ('преподы', 'список преподавателей', 'викладачі'):
             bot.send_message(message.chat.id, codecs.open('prepods.txt', "r", "utf_8_sig").read())
@@ -105,9 +105,6 @@ def start_mooooooooooooooooooorning_bot():
     r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
-    weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
-    now = datetime.now()
-    current_day = weekdays[now.weekday()]
     send_msg(f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp} \n---------------------------------------------------\nПара начнется через 30 минут")
 def start_monday_1para_bot():
     send_msg("[INFO] 1/2 Пара только что началась")
@@ -161,7 +158,6 @@ def start_friday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что началась")
 def end_friday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что закончилась")
-import schedule
 
 def ched():
     with open("schedule.txt", "r") as file:
