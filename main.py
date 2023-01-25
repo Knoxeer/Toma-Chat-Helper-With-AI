@@ -101,7 +101,7 @@ def happybirthday_bot():
     today = time.strftime('%d.%m')
     if today in birthdays:
         send_msg(f"[INFO] Сегодня день рождения:\n{birthdays[today]}")
-def start_monday_bot():
+def start_mooooooooooooooooooorning_bot():
     r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
@@ -117,14 +117,6 @@ def start_monday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что началась")
 def end_monday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что закончилась")
-def start_tuesday_bot():
-    r = requests.get('https://sinoptik.ua/погода-варшава')
-    soup = BS(r.content, 'html.parser')
-    temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
-    weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
-    now = datetime.now()
-    current_day = weekdays[now.weekday()]
-    send_msg(f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp} \n---------------------------------------------------\nПара начнется через 30 минут")
 def start_tuesday_1para_bot():
     send_msg("[INFO] 1/2 Пара только что началась")
 def end_tuesday_1para_bot():
@@ -133,14 +125,6 @@ def start_tuesday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что началась")
 def end_tuesday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что закончилась")
-def start_wednesday_bot():
-    r = requests.get('https://sinoptik.ua/погода-варшава')
-    soup = BS(r.content, 'html.parser')
-    temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
-    weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
-    now = datetime.now()
-    current_day = weekdays[now.weekday()]
-    send_msg(f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp} \n---------------------------------------------------\nПара начнется через 30 минут")
 def start_wednesday_1para_bot():
     send_msg("[INFO] 1/3 Пара только что началась")
 def end_wednesday_1para_bot():
@@ -153,14 +137,6 @@ def start_wednesday_3para_bot():
     send_msg("[INFO] 3/3 Пара только что началась")
 def end_wednesday_3para_bot():
     send_msg("[INFO] 3/3 Пара только что закончилась")
-def start_thursday_bot():
-    r = requests.get('https://sinoptik.ua/погода-варшава')
-    soup = BS(r.content, 'html.parser')
-    temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
-    weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
-    now = datetime.now()
-    current_day = weekdays[now.weekday()]
-    send_msg(f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp} \n---------------------------------------------------\nПара начнется через 30 минут")
 def start_thursday_1para_bot():
     send_msg("[INFO] 1/4 Пара только что началась")
 def end_thursday_1para_bot():
@@ -177,15 +153,6 @@ def start_thursday_4para_bot():
     send_msg("[INFO] 4/4 Пара только что началась")
 def end_thursday_4para_bot():
     send_msg("[INFO] 4/4 Пара только что закончилась")
-def start_friday_bot():
-    r = requests.get('https://sinoptik.ua/погода-варшава')
-    soup = BS(r.content, 'html.parser')
-    temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
-    weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
-    now = datetime.now()
-    current_day = weekdays[now.weekday()]
-    send_msg(f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp} \n---------------------------------------------------\nПара начнется через 30 минут")
-
 def start_friday_1para_bot():
     send_msg("[INFO] 1/2 Пара только что началась")
 def end_friday_1para_bot():
@@ -206,7 +173,6 @@ def ched():
 
     while True:
         schedule.run_pending()
-
 
 if __name__ == "__main__":
     thr = Thread(target=ched, daemon=True)
