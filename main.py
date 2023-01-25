@@ -1,6 +1,17 @@
-import telebot; import time; import schedule; import openai; import random; import configparser; import telebot
-import re; from threading import Thread; import requests; import datetime; from datetime import datetime
-from bs4 import BeautifulSoup as BS; import codecs
+import telebot
+import schedule
+import requests
+import datetime
+import configparser
+import time
+import openai
+import random
+import telebot
+import codecs
+import re
+from threading import Thread
+from datetime import datetime
+from bs4 import BeautifulSoup as BS;
 
 config = configparser.ConfigParser();       config.read("settings.ini", encoding="utf-8")
 bot_api = config['Telegram']['bot_api'];    openai_api = config['OpenAI']['ai_api']
@@ -32,7 +43,7 @@ def lalala(message):
                     print(e)
 
         banned_words = []
-        with open('mat.ini', 'r') as f:
+        with open('badwords.ini', 'r') as f:
             banned_words = f.readlines()
         banned_words = [word.strip() for word in banned_words]
         if any(x in message.text for x in banned_words):
