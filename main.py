@@ -106,10 +106,14 @@ def start_mooooooooooooooooooorning_bot():
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
     send_msg(f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp} \n---------------------------------------------------\nПара начнется через 30 минут")
+def end_eveeeeeeeeeeeeeeeeeeeeening_bot():
+    send_msg("Мучения закончены, можно идти отдыхать")
 def start_para_bot():
-    send_msg("[INFO] Пара только что началась")
+    send_msg("[INFO] Пара только что началась!")
+def five_minutes_before_start_bot():
+    send_msg("[INFO] Пара начнется через 5 минут!")
 def end_para_bot():
-    send_msg("[INFO] Пара только что закончилась")
+    send_msg("[INFO] Пара только что закончилась!")
 def ched():
     with open("schedule.txt", "r") as file:
         lines = file.readlines()
