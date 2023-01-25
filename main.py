@@ -106,59 +106,10 @@ def start_mooooooooooooooooooorning_bot():
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
     send_msg(f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp} \n---------------------------------------------------\nПара начнется через 30 минут")
-def start_monday_1para_bot():
-    send_msg("[INFO] 1/2 Пара только что началась")
-def end_monday_1para_bot():
-    send_msg("[INFO] 1/2 Пара только что закончилась")
-def start_monday_2para_bot():
-    send_msg("[INFO] 2/2 Пара только что началась")
-def end_monday_2para_bot():
-    send_msg("[INFO] 2/2 Пара только что закончилась")
-def start_tuesday_1para_bot():
-    send_msg("[INFO] 1/2 Пара только что началась")
-def end_tuesday_1para_bot():
-    send_msg("[INFO] 1/2 Пара только что закончилась")
-def start_tuesday_2para_bot():
-    send_msg("[INFO] 2/2 Пара только что началась")
-def end_tuesday_2para_bot():
-    send_msg("[INFO] 2/2 Пара только что закончилась")
-def start_wednesday_1para_bot():
-    send_msg("[INFO] 1/3 Пара только что началась")
-def end_wednesday_1para_bot():
-    send_msg("[INFO] 1/3 Пара только что закончилась")
-def start_wednesday_2para_bot():
-    send_msg("[INFO] 2/3 Пара только что началась")
-def end_wednesday_2para_bot():
-    send_msg("[INFO] 2/3 Пара только что закончилась")
-def start_wednesday_3para_bot():
-    send_msg("[INFO] 3/3 Пара только что началась")
-def end_wednesday_3para_bot():
-    send_msg("[INFO] 3/3 Пара только что закончилась")
-def start_thursday_1para_bot():
-    send_msg("[INFO] 1/4 Пара только что началась")
-def end_thursday_1para_bot():
-    send_msg("[INFO] 1/4 Пара только что закончилась")
-def start_thursday_2para_bot():
-    send_msg("[INFO] 2/4 Пара только что началась")
-def end_thursday_2para_bot():
-    send_msg("[INFO] 2/4 Пара только что закончилась")
-def start_thursday_3para_bot():
-    send_msg("[INFO] 3/4 Пара только что началась")
-def end_thursday_3para_bot():
-    send_msg("[INFO] 3/4 Пара только что закончилась")
-def start_thursday_4para_bot():
-    send_msg("[INFO] 4/4 Пара только что началась")
-def end_thursday_4para_bot():
-    send_msg("[INFO] 4/4 Пара только что закончилась")
-def start_friday_1para_bot():
-    send_msg("[INFO] 1/2 Пара только что началась")
-def end_friday_1para_bot():
-    send_msg("[INFO] 1/2 Пара только что закончилась")
-def start_friday_2para_bot():
-    send_msg("[INFO] 2/2 Пара только что началась")
-def end_friday_2para_bot():
-    send_msg("[INFO] 2/2 Пара только что закончилась")
-
+def start_para_bot():
+    send_msg("[INFO] Пара только что началась")
+def end_para_bot():
+    send_msg("[INFO] Пара только что закончилась")
 def ched():
     with open("schedule.txt", "r") as file:
         lines = file.readlines()
