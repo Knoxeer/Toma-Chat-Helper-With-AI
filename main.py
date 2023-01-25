@@ -102,7 +102,7 @@ def happybirthday_bot():
     if today in birthdays:
         send_msg(f"[INFO] Сегодня день рождения:\n{birthdays[today]}")
 def start_monday_bot():
-    r = requests.get('https://ua.sinoptik.ua/погода-варшава')
+    r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
     weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
@@ -118,7 +118,7 @@ def start_monday_2para_bot():
 def end_monday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что закончилась")
 def start_tuesday_bot():
-    r = requests.get('https://ua.sinoptik.ua/погода-варшава')
+    r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
     weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
@@ -134,7 +134,7 @@ def start_tuesday_2para_bot():
 def end_tuesday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что закончилась")
 def start_wednesday_bot():
-    r = requests.get('https://ua.sinoptik.ua/погода-варшава')
+    r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
     weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
@@ -154,7 +154,7 @@ def start_wednesday_3para_bot():
 def end_wednesday_3para_bot():
     send_msg("[INFO] 3/3 Пара только что закончилась")
 def start_thursday_bot():
-    r = requests.get('https://ua.sinoptik.ua/погода-варшава')
+    r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
     weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
@@ -178,7 +178,7 @@ def start_thursday_4para_bot():
 def end_thursday_4para_bot():
     send_msg("[INFO] 4/4 Пара только что закончилась")
 def start_friday_bot():
-    r = requests.get('https://ua.sinoptik.ua/погода-варшава')
+    r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
     temp = soup.select('.temperature .min')[0].text + ', ' + soup.select('.temperature .max')[0].text
     weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
@@ -194,42 +194,19 @@ def start_friday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что началась")
 def end_friday_2para_bot():
     send_msg("[INFO] 2/2 Пара только что закончилась")
+import schedule
+
 def ched():
-        schedule.every().monday.at("10:15").do(start_monday_bot)
-        schedule.every().monday.at("10:45").do(start_monday_1para_bot)
-        schedule.every().monday.at("14:00").do(end_monday_1para_bot)
-        schedule.every().monday.at("14:30").do(start_monday_2para_bot)
-        schedule.every().monday.at("17:45").do(end_monday_2para_bot)
-        schedule.every().tuesday.at("10:15").do(start_tuesday_bot)
-        schedule.every().tuesday.at("10:45").do(start_tuesday_1para_bot)
-        schedule.every().tuesday.at("14:00").do(end_tuesday_1para_bot)
-        schedule.every().tuesday.at("14:30").do(start_tuesday_2para_bot)
-        schedule.every().tuesday.at("17:45").do(end_tuesday_2para_bot)
-        schedule.every().wednesday.at("10:15").do(start_wednesday_bot)
-        schedule.every().wednesday.at("10:45").do(start_wednesday_1para_bot)
-        schedule.every().wednesday.at("14:00").do(end_wednesday_1para_bot)
-        schedule.every().wednesday.at("14:30").do(start_wednesday_2para_bot)
-        schedule.every().wednesday.at("17:45").do(end_wednesday_2para_bot)
-        schedule.every().wednesday.at("19:45").do(start_wednesday_3para_bot)
-        schedule.every().wednesday.at("21:15").do(end_wednesday_3para_bot)
-        schedule.every().thursday.at("08:30").do(start_thursday_bot)
-        schedule.every().thursday.at("09:00").do(start_thursday_1para_bot)
-        schedule.every().thursday.at("12:15").do(end_thursday_1para_bot)
-        schedule.every().thursday.at("12:30").do(start_thursday_2para_bot)
-        schedule.every().thursday.at("16:00").do(end_thursday_2para_bot)
-        schedule.every().thursday.at("16:15").do(start_thursday_3para_bot)
-        schedule.every().thursday.at("19:30").do(end_thursday_3para_bot)
-        schedule.every().thursday.at("19:45").do(start_thursday_4para_bot)
-        schedule.every().thursday.at("21:15").do(end_thursday_4para_bot)
-        schedule.every().friday.at("09:15").do(start_friday_bot)
-        schedule.every().friday.at("09:45").do(start_friday_1para_bot)
-        schedule.every().friday.at("13:00").do(end_friday_1para_bot)
-        schedule.every().friday.at("13:30").do(start_friday_2para_bot)
-        schedule.every().friday.at("16:45").do(end_friday_2para_bot)
-        schedule.every().day.at("13:00").do(happybirthday_bot)
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
+    with open("schedule.txt", "r") as file:
+        lines = file.readlines()
+
+    for line in lines:
+        day, time, task = line.strip().split()
+        schedule.every().__getattribute__(day).at(time).do(eval(task))
+
+    while True:
+        schedule.run_pending()
+
 
 if __name__ == "__main__":
     thr = Thread(target=ched, daemon=True)
