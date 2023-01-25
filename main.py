@@ -41,7 +41,6 @@ def lalala(message):
                          'Пожалуйста, будьте уважительны к другим участникам. Мат никому не интересен']
             response = random.choice(responses)
             bot.send_message(message.chat.id, response)
-            #bot.send_message(message.chat.id, codecs.open('lists/prepods.txt', "r", "utf_8_sig").read())
         elif message.text.lower() in ('я тебя люблю', 'ты моя любовь', 'это секс', 'секс', 'это любовь'):
             bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEBm9pjxoJdN99yNA3oUGIpjP7EH3S2TgACTgIAAladvQow_mttgTIDby0E')
 
