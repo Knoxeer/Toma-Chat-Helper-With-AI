@@ -95,6 +95,12 @@ def lalala(message):
             orks = soup.select('.war_num')[0].text
             bot.send_message(message.chat.id,f"Мертвых орков уже: {orks}")
         return
+
+def dead_orks_bot():
+    r = requests.get('https://www.pravda.com.ua/rus/')
+    soup = BS(r.content, 'html.parser')
+    orks = soup.select('.war_num')[0].text
+    send_msg(f"Мертвых орков уже:{orks}")
 def happybirthday_bot():
     birthdays = {}
     with open("birthdays.txt", "r") as f:
@@ -104,12 +110,6 @@ def happybirthday_bot():
     today = time.strftime('%d.%m')
     if today in birthdays:
         send_msg(f"[INFO] Сегодня день рождения:\n{birthdays[today]}")
-
-def dead_orks_bot():
-    r = requests.get('https://www.pravda.com.ua/rus/')
-    soup = BS(r.content, 'html.parser')
-    orks = soup.select('.war_num')[0].text
-    send_msg(f"Мертвых орков на сегодня:{orks}")
 def start_mooooooooooooooooooorning_bot():
     r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
