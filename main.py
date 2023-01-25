@@ -117,7 +117,6 @@ def end_para_bot():
 def ched():
     with open("schedule.txt", "r") as file:
         lines = file.readlines()
-
     for line in lines:
         day, time, task = line.strip().split()
         schedule.every().__getattribute__(day).at(time).do(eval(task))
