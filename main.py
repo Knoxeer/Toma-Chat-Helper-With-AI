@@ -105,14 +105,76 @@ def lalala(message):
             r = requests.get('https://www.pravda.com.ua/rus/')
             soup = BS(r.content, 'html.parser')
             orks = soup.select('.war_num')[0].text
-            bot.send_message(message.chat.id,f"Мертвых орков уже: {orks}")
+            airplane = soup.select('.war_num')[1].text
+            hellicop = soup.select('.war_num')[2].text
+            tanks = soup.select('.war_num')[3].text
+            BBM = soup.select('.war_num')[4].text
+            ARTA = soup.select('.war_num')[5].text
+            PVO = soup.select('.war_num')[6].text
+            RSZO = soup.select('.war_num')[7].text
+            KAMAZ = soup.select('.war_num')[8].text
+            KORABL = soup.select('.war_num')[9].text
+            SHAHID = soup.select('.war_num')[10].text
+            WARDAY = soup.select('.war_title')[0].text
+            now = datetime.now()
+            daymonth = now.strftime("%d.%m")
+            stats = {
+                'Орков💀':   orks,
+                'Танков':     tanks,
+                'Самолетов':  airplane,
+                'Вертолетов': hellicop,
+                'Бронемашин': BBM,
+                'Артиллерия': ARTA,
+                'ПВО':        PVO,
+                'РСЗО':       RSZO,
+                'КАМАЗЫ':     KAMAZ,
+                'Катеры':     KORABL,
+                'БПЛА':       SHAHID,
+            }
+            #message_text = f"Потери захватчиков на утро {daymonth}\n{WARDAY}\n"
+            message_text = f"{WARDAY}\n\n"
+            for key, value in stats.items():
+                message_text += f"{key}: {value.replace('+', ' | 🔥 +').replace('~', ' ')}\n"
+            bot.send_message(message.chat.id, message_text)
         return
-
 def dead_orks_bot():
     r = requests.get('https://www.pravda.com.ua/rus/')
     soup = BS(r.content, 'html.parser')
     orks = soup.select('.war_num')[0].text
-    send_msg(f"Мертвых орков уже:{orks}")
+    airplane = soup.select('.war_num')[1].text
+    hellicop = soup.select('.war_num')[2].text
+    tanks = soup.select('.war_num')[3].text
+    BBM = soup.select('.war_num')[4].text
+    ARTA = soup.select('.war_num')[5].text
+    PVO = soup.select('.war_num')[6].text
+    RSZO = soup.select('.war_num')[7].text
+    KAMAZ = soup.select('.war_num')[8].text
+    KORABL = soup.select('.war_num')[9].text
+    SHAHID = soup.select('.war_num')[10].text
+    WARDAY = soup.select('.war_title')[0].text
+    now = datetime.now()
+    daymonth = now.strftime("%d.%m")
+    stats = {
+        'Орков💀': orks,
+        'Танков': tanks,
+        'Самолетов': airplane,
+        'Вертолетов': hellicop,
+        'Бронемашин': BBM,
+        'Артиллерия': ARTA,
+        'ПВО': PVO,
+        'РСЗО': RSZO,
+        'КАМАЗЫ': KAMAZ,
+        'Катеры': KORABL,
+        'БПЛА': SHAHID,
+    }
+    #id =
+    # message_text = f"Потери захватчиков на утро {daymonth}\n{WARDAY}\n"
+    message_text = f"{WARDAY}\n\n"
+    for key, value in stats.items():
+        message_text += f"{key}: {value.replace('+', ' | 🔥 +').replace('~', ' ')}\n"
+    send_msg(message_text)
+    #bot.send_message(id, message_text)
+    #send_msg(f"Мертвых орков уже:{orks}".replace("+", "").replace("~", ""))
 def happybirthday_bot():
     birthdays = {}
     with open("birthdays.txt", "r") as f:
