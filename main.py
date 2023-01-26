@@ -8,6 +8,7 @@ import time
 import openai
 import random
 import telebot
+import sqlite3
 import codecs
 import re
 from threading import Thread
@@ -23,13 +24,18 @@ weekdays = ["Понеделник", "Вторник", "Среда", "Четве�
 now = datetime.now()
 current_day = weekdays[now.weekday()]
 
-# подключение к бд
-#conn = sqlite3.connect("main.db", check_same_thread=False)
-#cur = conn.cursor()
+# Подключение к базе данных
+conn = sqlite3.connect('main.db')
+cursor = conn.cursor()
 
-# Подгрузка ID (вайтлист) с конфиг файла
-allowed_ids = config.get('WhiteList', 'allowed_ids').split(',')
-allowed_ids = list(map(int, allowed_ids))
+# Извлечение ID из таблицы 'whitelist'
+cursor.execute("SELECT allowed_ids FROM whitelist")
+allowed_ids = [row[0] for row in cursor.fetchall()]
+
+# Закрытие подключения
+cursor.close()
+conn.close()
+
 def send_msg(message): # ДР + Пары + schedule
     ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
     for id in ids:
