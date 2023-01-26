@@ -30,65 +30,9 @@ def lalala(message):
     print(f'Имя: {message.from_user.first_name}Логин: {message.from_user.username} UserID: {message.from_user.id} Написал: {message.text} ChatID: {message.chat.id}')
     id_chat_config
     for id in id_chat_config:
-        allowed_ids = [347081774, # white list id for using TomaAI
-                       432153909, #
-                       476049995, #
-                       610687824, #
-                       292769304, #
-                       917813838, #
-                       1012375116, #
-                       476055977, #
-                       638214956, #
-                       451593243, #
-                       395466608, #
-                       527478181, #
-                       597625068, #
-                       474589496, #
-                       2041843983, #
-                       5783129042, #
-                       1782900598, #
-                       374400865, #
-                       420010587, #
-                       2035255973, #
-                       635408613, #
-                       505524954, #
-                       799997126, #
-                       5449431424, #
-                       660477751, #
-                       647631865, #
-                       691817178, #
-                       798326616, #
-                       788984733, #
-                       428478715, #
-                       394030943, #
-                       5707489544, #
-                       566760716, #
-                       1129618092, #
-                       543346384, #
-                       581571765, #
-                       5582410569, #
-                       521041989, #
-                       573612999, #
-                       711705684, #
-                       1630006436, #
-                       744768160, #
-                       1375470191, #
-                       824940739, #
-                       749146762, #
-                       990663557, #
-                       1911916295, #
-                       397955776, #
-                       867978891, #
-                       569712179, #
-                       829708722, #
-                       815897771, #
-                       541546135, #
-                       356081461, #
-                       5071555320, #
-                       813345609, #
-                       5512205977, #
-                       851478921, #
-                       1427342741,]
+        # Подгрузка ID для вайтлиста с конфиг файла
+        allowed_ids = config.get('WhiteList', 'allowed_ids').split(',')
+        allowed_ids = list(map(int, allowed_ids))
 
         if message.from_user.id in allowed_ids:
             if "Toma" in message.text or "toma" in message.text or "скайнет" in message.text or "Скайнет" in message.text or "ботинок" in message.text or "Ботинок" in message.text or "Тома" in message.text or "тома" in message.text:
