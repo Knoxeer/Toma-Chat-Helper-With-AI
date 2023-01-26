@@ -23,6 +23,10 @@ weekdays = ["Понеделник", "Вторник", "Среда", "Четве�
 now = datetime.now()
 current_day = weekdays[now.weekday()]
 
+# подключение к бд
+#conn = sqlite3.connect("main.db", check_same_thread=False)
+#cur = conn.cursor()
+
 # Подгрузка ID (вайтлист) с конфиг файла
 allowed_ids = config.get('WhiteList', 'allowed_ids').split(',')
 allowed_ids = list(map(int, allowed_ids))
