@@ -26,7 +26,7 @@ current_day = weekdays[now.weekday()]
 allowed_ids = config.get('WhiteList', 'allowed_ids').split(',')
 allowed_ids = list(map(int, allowed_ids))
 def send_msg(message): # ДР + Пары + schedule
-    ids = (-1001895899920, -1001341272726, -1001534946044)
+    ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
     for id in ids:
         bot.send_message(id, message)
 @bot.message_handler(content_types=['text'])
