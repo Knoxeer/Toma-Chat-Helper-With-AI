@@ -21,6 +21,10 @@ id_chat_config = config['Telegram']['id_chat'];
 weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
 now = datetime.now()
 current_day = weekdays[now.weekday()]
+
+# Подгрузка ID (вайтлист) с конфиг файла
+allowed_ids = config.get('WhiteList', 'allowed_ids').split(',')
+allowed_ids = list(map(int, allowed_ids))
 def send_msg(message): # ДР + Пары + schedule
     ids = (-1001895899920, -1001341272726, -1001534946044)
     for id in ids:
@@ -30,10 +34,6 @@ def lalala(message):
     print(f'Имя: {message.from_user.first_name}Логин: {message.from_user.username} UserID: {message.from_user.id} Написал: {message.text} ChatID: {message.chat.id}')
     id_chat_config
     for id in id_chat_config:
-        # Подгрузка ID для вайтлиста с конфиг файла
-        allowed_ids = config.get('WhiteList', 'allowed_ids').split(',')
-        allowed_ids = list(map(int, allowed_ids))
-
         if message.from_user.id in allowed_ids:
             if "Toma" in message.text or "toma" in message.text or "скайнет" in message.text or "Скайнет" in message.text or "ботинок" in message.text or "Ботинок" in message.text or "Тома" in message.text or "тома" in message.text:
                 bot.send_chat_action(message.chat.id, 'typing')
