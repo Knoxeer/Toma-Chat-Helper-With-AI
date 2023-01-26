@@ -21,7 +21,7 @@ id_chat_config = config['Telegram']['id_chat'];
 weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
 now = datetime.now()
 current_day = weekdays[now.weekday()]
-def send_msg(message): # ДР + Пары
+def send_msg(message): # ДР + Пары + schedule
     ids = (-1001895899920, -1001341272726)
     for id in ids:
         bot.send_message(id, message)
