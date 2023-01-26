@@ -15,12 +15,25 @@ from threading import Thread
 from datetime import datetime
 from bs4 import BeautifulSoup as BS;
 
-config = configparser.ConfigParser();       config.read("settings.ini", encoding="utf-8")
-bot_api = config['Telegram']['bot_api'];    openai_api = config['OpenAI']['ai_api']
-bot = telebot.TeleBot(bot_api);             openai.api_key = openai_api
-id_chat_config = config['Telegram']['id_chat'];
+# Чтение конфигурационного файла
+config = configparser.ConfigParser()
+config.read("settings.ini", encoding="utf-8")
 
+# Получение ключей для бота и OpenAI
+bot_api = config['Telegram']['bot_api']
+openai_api = config['OpenAI']['ai_api']
+
+# Инициализация бота и OpenAI
+bot = telebot.TeleBot(bot_api)
+openai.api_key = openai_api
+
+# Получение ID чата
+id_chat_config = config['Telegram']['id_chat']
+
+# Список дней недели
 weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
+
+# Получение текущего дня
 now = datetime.now()
 current_day = weekdays[now.weekday()]
 
