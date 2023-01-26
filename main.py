@@ -22,7 +22,7 @@ weekdays = ["Понеделник", "Вторник", "Среда", "Четве�
 now = datetime.now()
 current_day = weekdays[now.weekday()]
 def send_msg(message): # ДР + Пары + schedule
-    ids = (-1001895899920, -1001341272726)
+    ids = (-1001895899920, -1001341272726, -1001534946044)
     for id in ids:
         bot.send_message(id, message)
 @bot.message_handler(content_types=['text'])
