@@ -14,6 +14,7 @@ from threading import Thread
 from datetime import datetime
 from bs4 import BeautifulSoup as BS;
 
+# Используем библиотеку configParser
 config = configparser.ConfigParser()
 config.read("settings.ini", encoding="utf-8")
 
