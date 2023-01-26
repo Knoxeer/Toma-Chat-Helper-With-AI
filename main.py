@@ -30,19 +30,79 @@ def lalala(message):
     print(f'Имя: {message.from_user.first_name}Логин: {message.from_user.username} UserID: {message.from_user.id} Написал: {message.text} ChatID: {message.chat.id}')
     id_chat_config
     for id in id_chat_config:
-        if "Toma" in message.text or "toma" in message.text or "скайнет" in message.text or "Скайнет" in message.text or "ботинок" in message.text or "Ботинок" in message.text or "Тома" in message.text or "тома" in message.text:
-            bot.send_chat_action(message.chat.id, 'typing')
-            message.text = re.sub(r'(Toma|toma|скайнет|Скайнет|ботинок|Ботинок|Тома|тома)', '', message.text)
-            response = openai.Completion.create(model="text-davinci-003", prompt=message.text, max_tokens=1000)
-            full_response = response['choices'][0]['text']  # Use the text property of the first element of the choices list to access the full response
-            lines = full_response.splitlines()  # Split the response into individual lines
-            for line in lines:  # Iterate over the lines
-                try:
-                    bot.send_message(message.chat.id, line)  # Send each line back to the user as a separate message
-                except Exception as e:
-                    print(e)
+        allowed_ids = [347081774, # white list id for using TomaAI
+                       432153909, #
+                       476049995, #
+                       610687824, #
+                       292769304, #
+                       917813838, #
+                       1012375116, #
+                       476055977, #
+                       638214956, #
+                       451593243, #
+                       395466608, #
+                       527478181, #
+                       597625068, #
+                       474589496, #
+                       2041843983, #
+                       5783129042, #
+                       1782900598, #
+                       374400865, #
+                       420010587, #
+                       2035255973, #
+                       635408613, #
+                       505524954, #
+                       799997126, #
+                       5449431424, #
+                       660477751, #
+                       647631865, #
+                       691817178, #
+                       798326616, #
+                       788984733, #
+                       428478715, #
+                       394030943, #
+                       5707489544, #
+                       566760716, #
+                       1129618092, #
+                       543346384, #
+                       581571765, #
+                       5582410569, #
+                       521041989, #
+                       573612999, #
+                       711705684, #
+                       1630006436, #
+                       744768160, #
+                       1375470191, #
+                       824940739, #
+                       749146762, #
+                       990663557, #
+                       1911916295, #
+                       397955776, #
+                       867978891, #
+                       569712179, #
+                       829708722, #
+                       815897771, #
+                       541546135, #
+                       356081461, #
+                       5071555320, #
+                       813345609, #
+                       5512205977, #
+                       851478921, #
+                       1427342741,]
 
-        banned_words = []
+        if message.from_user.id in allowed_ids:
+            if "Toma" in message.text or "toma" in message.text or "скайнет" in message.text or "Скайнет" in message.text or "ботинок" in message.text or "Ботинок" in message.text or "Тома" in message.text or "тома" in message.text:
+                bot.send_chat_action(message.chat.id, 'typing')
+                message.text = re.sub(r'(Toma|toma|скайнет|Скайнет|ботинок|Ботинок|Тома|тома)', '', message.text)
+                response = openai.Completion.create(model="text-davinci-003", prompt=message.text, max_tokens=1000)
+                full_response = response['choices'][0]['text']  # Use the text property of the first element of the choices list to access the full response
+                lines = full_response.splitlines()  # Split the response into individual lines
+                for line in lines:  # Iterate over the lines
+                    try:
+                        bot.send_message(message.chat.id, line)  # Send each line back to the user as a separate message
+                    except Exception as e:
+                        print(e)
+            banned_words = []
         with open('badwords.ini', 'r') as f:
             banned_words = f.readlines()
         banned_words = [word.strip() for word in banned_words]
@@ -140,18 +200,6 @@ def lalala(message):
 def dead_orks_bot():
     r = requests.get('https://www.pravda.com.ua/rus/')
     soup = BS(r.content, 'html.parser')
-    orks = soup.select('.war_num')[0].text
-    airplane = soup.select('.war_num')[1].text
-    hellicop = soup.select('.war_num')[2].text
-    tanks = soup.select('.war_num')[3].text
-    BBM = soup.select('.war_num')[4].text
-    ARTA = soup.select('.war_num')[5].text
-    PVO = soup.select('.war_num')[6].text
-    RSZO = soup.select('.war_num')[7].text
-    KAMAZ = soup.select('.war_num')[8].text
-    KORABL = soup.select('.war_num')[9].text
-    SHAHID = soup.select('.war_num')[10].text
-    WARDAY = soup.select('.war_title')[0].text
     now = datetime.now()
     daymonth = now.strftime("%d.%m")
     stats = {
@@ -167,14 +215,10 @@ def dead_orks_bot():
         'Катеры': KORABL,
         'БПЛА': SHAHID,
     }
-    #id =
-    # message_text = f"Потери захватчиков на утро {daymonth}\n{WARDAY}\n"
     message_text = f"{WARDAY}\n\n"
     for key, value in stats.items():
         message_text += f"{key}: {value.replace('+', ' | 🔥 +').replace('~', ' ')}\n"
     send_msg(message_text)
-    #bot.send_message(id, message_text)
-    #send_msg(f"Мертвых орков уже:{orks}".replace("+", "").replace("~", ""))
 def happybirthday_bot():
     birthdays = {}
     with open("birthdays.txt", "r") as f:
@@ -183,28 +227,24 @@ def happybirthday_bot():
             birthdays[date] = name
     today = time.strftime('%d.%m')
     if today in birthdays:
-        send_msg(f"[INFO] Сегодня день рождения:\n{birthdays[today]}")
+        send_msg(f"[INFO] 🎂 Сегодня День Рождения:\n{birthdays[today]}")
 def start_mooooooooooooooooooorning_bot():
     r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
-    temp = soup.select('.today-temp')[0].text
-    temp = int(re.search(r'\d+', temp).group())  # Извлекаем число из строки с температурой
-    send_msg(
-        f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp}°c \n---------------------------------------------------\nПара начнется через 30 минут")
-    if temp < 0:
-        send_msg("Сейчас прохладно, наденьте шапку перед выходом на улицу")
-    elif temp < -5:
-        send_msg("Сейчас холодно, наденьте теплую куртку и шапку.")
-    elif temp < -10:
-        send_msg("Одевайся теплее, если выходишь на улицу. А вообще, не выходи из комнаты, не совершай ошибку 🧥")
+    temp = int(re.search(r'\d+', soup.select('.today-temp')[0].text).group())
+    send_msg(f"Доброе утро ⛅ \nВаршава, {current_day} \nТемпература: {temp}°c \n---------------------------------------------------\nПара начнется через 30 минут")
 def end_eveeeeeeeeeeeeeeeeeeeeening_bot():
-    send_msg("Мучения закончены, можно идти отдыхать")
+    messages = ["💃 Мучения закончены, можно идти отдыхать", "🫶 Пары на сегодня окончены", "🥹 Это была последняя пара, расходимся", "😏 Сегодня пар больше не будет", "💋 Спасибо за внимание, пары закончены", "👌 Больше пар не будет"]
+    send_msg(random.choice(messages))
 def start_para_bot():
-    send_msg("[INFO] Пара только что началась!")
+    messages = [" Пара только что началась!", "🫶 Пара начинается!", "🥹  Пара началась!", " Занятие началось!", "💋 Занятие только что началось!", "  Занятие начинается!"]
+    send_msg(random.choice(messages))
 def five_minutes_before_start_bot():
-    send_msg("[INFO] Пара начнется через 5 минут!")
+    messages = ["❗️ Пара начнется через 5 минут", "🫶❗️ Через пару минут начинается занятие", "❗️ Совсем скоро начнется пара", "❗️ Занятие начнется через 5 минут", "💋❗️ Пара начнется с минуты на минуту", "❗️ Через 5 минут я тебя жду на паре"]
+    send_msg(random.choice(messages))
 def end_para_bot():
-    send_msg("[INFO] Пара только что закончилась!")
+    messages = ["🔔 Пара только что закончилась!", "🔔 Пара закончилась!", "🔔 Эта пара только что завершилась!", "🔔 Пара завершена!", "💋🔔 Занятие закончено!", "🔔 Пара завершилась, спасибо за внимание!"]
+    send_msg(random.choice(messages))
 def ched():
     with open("schedule.txt", "r") as file:
         lines = file.readlines()
