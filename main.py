@@ -1,6 +1,7 @@
 import telebot
 import schedule
 import requests
+import wikipedia
 import datetime
 import configparser
 import time
@@ -13,11 +14,16 @@ from threading import Thread
 from datetime import datetime
 from bs4 import BeautifulSoup as BS;
 
-config = configparser.ConfigParser();       config.read("settings.ini", encoding="utf-8")
-bot_api = config['Telegram']['bot_api'];    openai_api = config['OpenAI']['ai_api']
-bot = telebot.TeleBot(bot_api);             openai.api_key = openai_api
-id_chat_config = config['Telegram']['id_chat'];
+config = configparser.ConfigParser()
+config.read("settings.ini", encoding="utf-8")
 
+# Берем токен и АПИ с settings.ini
+bot_api = config['Telegram']['bot_api']
+openai_api = config['OpenAI']['ai_api']
+bot = telebot.TeleBot(bot_api)
+openai.api_key = openai_api
+
+# Подтягивается при использовании функции погоды
 weekdays = ["Понеделник", "Вторник", "Среда", "Четверг", "Пятница", "Субота", "Воскресенье"]
 now = datetime.now()
 current_day = weekdays[now.weekday()]
@@ -25,7 +31,9 @@ current_day = weekdays[now.weekday()]
 # Подгрузка ID (вайтлист) с конфиг файла
 allowed_ids = config.get('WhiteList', 'allowed_ids').split(',')
 allowed_ids = list(map(int, allowed_ids))
-def send_msg(message): # ДР + Пары + schedule
+
+# ДР + Пары + schedule
+def send_msg(message):
     ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
     for id in ids:
         bot.send_message(id, message)
