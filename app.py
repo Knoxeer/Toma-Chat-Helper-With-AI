@@ -38,7 +38,10 @@ class CustomBot(telebot.TeleBot):
         
     def _configure_middleware(self):
         self.setup_middleware(BotMiddleware())
-    
+
+    def _configure_scheduler(self):
+        ...
+
     def handle_message(self, handler, **params):
         self.message_handler(**params)(handler)
     

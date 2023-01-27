@@ -1,4 +1,4 @@
-import tgbot
+import app
 import app_logging
 import argparse
 
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     args = parser.parse_args()  
     
     app_logging.configure_logger(args.logLevel)
-    bot = tgbot.CustomBot(use_class_middlewares=True)
+    bot = app.CustomBot(use_class_middlewares=True)
     
 
     # thr = Thread(target=ched, daemon=True)
