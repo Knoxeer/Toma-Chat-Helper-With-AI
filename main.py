@@ -168,6 +168,18 @@ def lalala(message):
 def dead_orks_bot():
     r = requests.get('https://www.pravda.com.ua/rus/')
     soup = BS(r.content, 'html.parser')
+    orks = soup.select('.war_num')[0].text
+    airplane = soup.select('.war_num')[1].text
+    hellicop = soup.select('.war_num')[2].text
+    tanks = soup.select('.war_num')[3].text
+    BBM = soup.select('.war_num')[4].text
+    ARTA = soup.select('.war_num')[5].text
+    PVO = soup.select('.war_num')[6].text
+    RSZO = soup.select('.war_num')[7].text
+    KAMAZ = soup.select('.war_num')[8].text
+    KORABL = soup.select('.war_num')[9].text
+    SHAHID = soup.select('.war_num')[10].text
+    WARDAY = soup.select('.war_title')[0].text
     now = datetime.now()
     daymonth = now.strftime("%d.%m")
     stats = {
