@@ -10,6 +10,7 @@ import random
 import telebot
 import sqlite3
 import codecs
+import os # для определения директории проекта
 import re
 from threading import Thread
 from datetime import datetime
@@ -37,6 +38,21 @@ weekdays = ["Понеделник", "Вторник", "Среда", "Четве�
 now = datetime.now()
 current_day = weekdays[now.weekday()]
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+# Здесь указываем путь к файлу базы данных
+#engine = create_engine('postgresql://username:password@host:port/main.bd')
+
+# Создаем сессию
+#Session = sessionmaker(bind=engine)
+#session = Session()
+
+# Извлекаем информацию из таблицы 'whitelist' и колонки 'allowed_ids'
+#allowed_ids = session.query("allowed_ids").from_statement("SELECT allowed_ids FROM whitelist").all()
+
+#print(allowed_ids)
+
 # Подключение к базе данных
 conn = sqlite3.connect('main.db')
 cursor = conn.cursor()
@@ -48,6 +64,7 @@ allowed_ids = [row[0] for row in cursor.fetchall()]
 # Закрытие подключения
 cursor.close()
 conn.close()
+
 
 def send_msg(message): # ДР + Пары + schedule
     ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
@@ -70,17 +87,17 @@ def lalala(message):
                         bot.send_message(message.chat.id, line)  # Send each line back to the user as a separate message
                     except Exception as e:
                         print(e)
-            banned_words = []
-        with open('badwords.ini', 'r') as f:
-            banned_words = f.readlines()
-        banned_words = [word.strip() for word in banned_words]
-        if any(x in message.text for x in banned_words):
-            responses = ['Не материтесь (>_<)', 'Пожалуйста, не используйте такие слова', 'Пожалуйста, будьте вежливы',
-                         'Пожалуйста, обращайтесь к другим с уважением', 'Не используйте оскорбительную лексику',
-                         'Пожалуйста, будьте уважительны к другим участникам. Мат никому не интересен']
+        #    banned_words = []
+        #with open('badwords.ini', 'r') as f:
+        #    banned_words = f.readlines()
+        #banned_words = [word.strip() for word in banned_words]
+        #if any(x in message.text for x in banned_words):
+        #    responses = ['Не материтесь (>_<)', 'Пожалуйста, не используйте такие слова', 'Пожалуйста, будьте вежливы',
+        #                 'Пожалуйста, обращайтесь к другим с уважением', 'Не используйте оскорбительную лексику',
+        #                 'Пожалуйста, будьте уважительны к другим участникам. Мат никому не интересен']
 
-            response = random.choice(responses)
-            bot.send_message(message.chat.id, response)
+#            response = random.choice(responses)
+ #           bot.send_message(message.chat.id, response)
         elif message.text.lower() in ('я тебя люблю', 'ты моя любовь', 'это секс', 'секс', 'это любовь'):
             bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEBm9pjxoJdN99yNA3oUGIpjP7EH3S2TgACTgIAAladvQow_mttgTIDby0E')
 
