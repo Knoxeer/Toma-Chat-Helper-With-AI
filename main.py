@@ -65,7 +65,6 @@ allowed_ids = [row[0] for row in cursor.fetchall()]
 cursor.close()
 conn.close()
 
-
 def send_msg(message): # ДР + Пары + schedule
     ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
     for id in ids:
@@ -181,6 +180,21 @@ def lalala(message):
             for key, value in stats.items():
                 message_text += f"{key}: {value.replace('+', ' | 🔥 +').replace('~', ' ')}\n"
             bot.send_message(message.chat.id, message_text)
+
+        if message.text.lower() in ('др', 'список на др', 'список др'):
+            # Read birthday data from file
+            birthdays = {}
+            if os.path.exists("birthdays.txt"):
+                with open("birthdays.txt", "r") as f:
+                    for line in f:
+                        date, name = line.strip().split("|")
+                        birthdays[date] = name
+
+            response = "Список ДР:\n"
+            for date, name in birthdays.items():
+                response += f"{date}: {name}\n"
+            bot.send_message(message.chat.id, response)
+
         return
 def dead_orks_bot():
     r = requests.get('https://www.pravda.com.ua/rus/')
