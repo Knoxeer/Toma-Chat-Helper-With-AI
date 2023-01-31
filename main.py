@@ -78,19 +78,27 @@ def remove_from_file(file_name, date, name):
             if line.strip() != f"{date}|{name}":
                 file.write(line)
 
+
 @bot.message_handler(commands=['меню'])
 def handle_menu(message):
     keyboard = types.InlineKeyboardMarkup()
+
     add_button = types.InlineKeyboardButton(text='Добавить день рождения', callback_data='add')
     remove_button = types.InlineKeyboardButton(text='Удалить день рождения', callback_data='remove')
     list_button = types.InlineKeyboardButton(text='Показать список', callback_data='list')
-    keyboard.add(add_button, remove_button, list_button)
+
+    keyboard.add(add_button)
+    keyboard.add(remove_button)
+    keyboard.add(list_button)
+
     bot.send_message(message.chat.id, 'Выберите действие:', reply_markup=keyboard)
+
 
 @bot.callback_query_handler(func=lambda call: call.data == 'add')
 def handle_add_birthday(call):
     bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 01.01)')
     bot.register_next_step_handler(call.message, process_birthday_step)
+
 
 def process_birthday_step(message):
     try:
@@ -101,11 +109,11 @@ def process_birthday_step(message):
     except ValueError:
         bot.send_message(message.chat.id, 'Неверный формат, попробуйте еще раз (например: Иван 01.01)')
 
+
 @bot.callback_query_handler(func=lambda call: call.data == 'remove')
 def handle_remove_birthday(call):
     bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 01.01)')
     bot.register_next_step_handler(call.message, remove_birthday)
-
 def remove_birthday(message):
     name, date = message.text.strip().split()
     date = datetime.strptime(date, '%d.%m').date()
