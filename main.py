@@ -13,6 +13,7 @@ import codecs
 import os # для определения директории проекта
 import re
 from threading import Thread
+from telebot import types
 from datetime import datetime
 from bs4 import BeautifulSoup as BS;
 
@@ -76,6 +77,50 @@ def remove_from_file(file_name, date, name):
         for line in lines:
             if line.strip() != f"{date}|{name}":
                 file.write(line)
+
+@bot.message_handler(commands=['меню'])
+def handle_menu(message):
+    keyboard = types.InlineKeyboardMarkup()
+    add_button = types.InlineKeyboardButton(text='Добавить день рождения', callback_data='add')
+    remove_button = types.InlineKeyboardButton(text='Удалить день рождения', callback_data='remove')
+    list_button = types.InlineKeyboardButton(text='Показать список', callback_data='list')
+    keyboard.add(add_button, remove_button, list_button)
+    bot.send_message(message.chat.id, 'Выберите действие:', reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: call.data == 'add')
+def handle_add_birthday(call):
+    bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 01.01)')
+    bot.register_next_step_handler(call.message, process_birthday_step)
+
+def process_birthday_step(message):
+    try:
+        name, date = message.text.strip().split(' ')
+        with open('birthdays.txt', 'a') as file:
+            file.write(f"{name} {date}\n")
+        bot.send_message(message.chat.id, f"День рождения {name} {date} добавлен в список")
+    except ValueError:
+        bot.send_message(message.chat.id, 'Неверный формат, попробуйте еще раз (например: Иван 01.01)')
+
+@bot.callback_query_handler(func=lambda call: call.data == 'remove')
+def handle_remove_birthday(call):
+    bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 01.01)')
+    bot.register_next_step_handler(call.message, remove_birthday)
+
+def remove_birthday(message):
+    name, date = message.text.strip().split()
+    date = datetime.strptime(date, '%d.%m').date()
+    with open('birthdays.txt', 'r') as file:
+        birthdays = file.readlines()
+    birthdays = [x for x in birthdays if not f'{name} {date.strftime("%d.%m")}\n' == x]
+    with open('birthdays.txt', 'w') as file:
+        file.writelines(birthdays)
+    bot.send_message(message.chat.id, 'День рождения успешно удален!')
+
+@bot.callback_query_handler(func=lambda call: call.data == 'list')
+def handle_show_list(call):
+    with open('birthdays.txt', 'r') as file:
+        birthdays = file.readlines()
+    bot.send_message(call.message.chat.id, '\n'.join(birthdays))
 
 @bot.message_handler(commands=['др'])
 def handle_unknown_command(message):
