@@ -65,6 +65,63 @@ allowed_ids = [row[0] for row in cursor.fetchall()]
 cursor.close()
 conn.close()
 
+def add_to_file(file_name, date, name):
+    with open(file_name, 'a') as file:
+        file.write(f"{date}|{name}\n")
+
+def remove_from_file(file_name, date, name):
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+    with open(file_name, 'w') as file:
+        for line in lines:
+            if line.strip() != f"{date}|{name}":
+                file.write(line)
+
+@bot.message_handler(commands=['др'])
+def handle_unknown_command(message):
+    bot.reply_to(message, "Меню управления списком ДР.\n\nДобавить пользователя - /добавить Имя 30.01\nУдалить пользователя - /удалить Имя 30.01\nПоказать писок - /список")
+@bot.message_handler(commands=['добавить'])
+def handle_record_birthday(message):
+    try:
+        _, name, date = message.text.split()
+        with open('birthdays.txt', 'a') as file:
+            file.write(f'{name}|{date}\n')
+        bot.reply_to(message, f'Пользователь {name} с датой рождения {date} Успешно добавлен в список на поздравления c др.')
+    except ValueError:
+        bot.reply_to(message, 'Incorrect format. Use /записать name date.')
+
+@bot.message_handler(commands=['удалить'])
+def handle_remove_birthday(message):
+    try:
+        _, name, date = message.text.split()
+        found = False
+        with open('birthdays.txt', 'r') as file:
+            lines = file.readlines()
+        with open('birthdays.txt', 'w') as file:
+            for line in lines:
+                if line.strip() != f'{name}|{date}':
+                    file.write(line)
+                else:
+                    found = True
+        if found:
+            # show the list of users after removing
+                bot.reply_to(message, f'{name} {date} Успешно удален из списка.')
+        else:
+            bot.reply_to(message, f'Birthday for {name} on {date} was not found.')
+    except ValueError:
+        bot.reply_to(message, 'Incorrect format. Use /убрать name date.')
+
+@bot.message_handler(commands=['список'])
+def handle_show_birthdays(message):
+    with open('birthdays.txt', 'r') as file:
+        birthdays = file.readlines()
+        if birthdays:
+            response = ''.join(birthdays)
+            bot.reply_to(message, f'В списке на поздравления:\n{response}')
+        else:
+            bot.reply_to(message, 'No birthdays added.')
+
+
 def send_msg(message): # ДР + Пары + schedule
     ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
     for id in ids:
@@ -181,20 +238,6 @@ def lalala(message):
                 message_text += f"{key}: {value.replace('+', ' | 🔥 +').replace('~', ' ')}\n"
             bot.send_message(message.chat.id, message_text)
 
-        if message.text.lower() in ('др', 'список на др', 'список др'):
-            # Read birthday data from file
-            birthdays = {}
-            if os.path.exists("birthdays.txt"):
-                with open("birthdays.txt", "r") as f:
-                    for line in f:
-                        date, name = line.strip().split("|")
-                        birthdays[date] = name
-
-            response = "Список ДР:\n"
-            for date, name in birthdays.items():
-                response += f"{date}: {name}\n"
-            bot.send_message(message.chat.id, response)
-
         return
 def dead_orks_bot():
     r = requests.get('https://www.pravda.com.ua/rus/')
@@ -234,7 +277,7 @@ def happybirthday_bot():
     birthdays = {}
     with open("birthdays.txt", "r") as f:
         for line in f:
-            date, name = line.strip().split("|")
+            name, date = line.strip().split("|")
             birthdays[date] = name
     today = time.strftime('%d.%m')
     if today in birthdays:
