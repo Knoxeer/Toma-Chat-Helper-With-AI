@@ -48,4 +48,4 @@ friday 13:30 start_para_bot
 friday 16:45 end_para_bot
 friday 16:55 end_eveeeeeeeeeeeeeeeeeeeeening_bot
 day    12:00 dead_orks_bot
-day    10:00 happybirthday_bot
+day    02:14 happybirthday_bot
