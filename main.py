@@ -243,11 +243,11 @@ def lalala(message):
             banned_words = []
             with open('badwords.ini', 'r') as f:
                 banned_words = f.readlines()
-            banned_words = [word.strip() for word in banned_words]
+            banned_words = [word.strip().lower() for word in banned_words]
 
             words = message.text.split()
             for word in words:
-                if word in banned_words:
+                if word.lower() in banned_words:
                     responses = ['Не материтесь (>_<)', 'Пожалуйста, не используйте такие слова',
                                  'Пожалуйста, будьте вежливы',
                                  'Пожалуйста, обращайтесь к другим с уважением',
