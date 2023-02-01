@@ -183,11 +183,16 @@ def handle_remove_birthday(call):
         bot.answer_callback_query(callback_query_id=call.id, text="Извините, вам доступ запрещен.")
         return
     with open('birthdays.txt', 'r') as file:
-        homework = file.read()
-        numbers = "\n".join([f"{i + 1}. {line}" for i, line in enumerate(homework.splitlines())])
+        lines = file.readlines()
+        result = []
+        for i, line in enumerate(lines):
+            name, date = line.strip().split("|")
+            result.append(f"{i+1}. {name} {date.replace('|', ' ')}")
+        numbers = "\n".join(result)
     bot.send_message(call.message.chat.id, f"День рождения:\n\n{numbers}")
     bot.send_message(call.message.chat.id, 'Необходимый пункт для удаления:')
     bot.register_next_step_handler(call.message, remove_birthday)
+
 def remove_birthday(message):
     try:
         line_number = int(message.text) - 1
