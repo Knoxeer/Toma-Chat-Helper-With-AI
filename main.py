@@ -78,103 +78,146 @@ def remove_from_file(file_name, date, name):
             if line.strip() != f"{date}|{name}":
                 file.write(line)
 
-
-@bot.message_handler(commands=['меню'])
+allowed_users = [5071555320, 347081774, 432153909, 476049995, 610687824, 610687824, 292769304, 917813838, 1012375116, 476055977, 638214956, 451593243, 395466608, 527478181, 597625068, 474589496, 2041843983, 5783129042, 1782900598, 374400865, 420010587, 2035255973, 635408613, 505524954, 799997126, 5449431424, 660477751, 647631865, 691817178, 798326616, 788984733, 428478715, 394030943, 5707489544, 566760716, 1129618092, 543346384, 581571765, 5582410569, 521041989, 573612999, 711705684, 1630006436, 744768160, 1375470191, 824940739, 749146762, 990663557, 1911916295, 397955776, 867978891, 569712179, 829708722, 815897771, 541546135, 356081461, 813345609, 5512205977, 851478921, 1427342741] # add the user IDs here
+@bot.message_handler(commands=['меню','menu'])
 def handle_menu(message):
+    if message.from_user.id not in allowed_users:
+        bot.send_message(message.chat.id, "Извините, вам доступ запрещен.")
+        return
     keyboard = types.InlineKeyboardMarkup()
 
+    #reklama_button = types.InlineKeyboardButton(text='За баловоство лишаю доступа к этой команде', callback_data='add')
     add_button = types.InlineKeyboardButton(text='Добавить день рождения', callback_data='add')
     remove_button = types.InlineKeyboardButton(text='Удалить день рождения', callback_data='remove')
-    list_button = types.InlineKeyboardButton(text='Показать список', callback_data='list')
+    list_button = types.InlineKeyboardButton(text='Показать всех именинников', callback_data='list')
+    add_homework_button = types.InlineKeyboardButton(text='Записать домашнее задание', callback_data='add_homework')
+    view_homework_button = types.InlineKeyboardButton(text='Показать домашнее задание', callback_data='view_homework')
+    remove_homework_button = types.InlineKeyboardButton(text='Удалить домашнее задание', callback_data='remove_homework')
 
+    #keyboard.add(reklama_button)
     keyboard.add(add_button)
     keyboard.add(remove_button)
     keyboard.add(list_button)
 
+    keyboard.add(add_homework_button)
+    keyboard.add(view_homework_button)
+    keyboard.add(remove_homework_button)
+
     bot.send_message(message.chat.id, 'Выберите действие:', reply_markup=keyboard)
 
+    @bot.callback_query_handler(func=lambda call: call.data == 'add_homework')
+    def handle_add_homework(call):
+        if call.from_user.id not in allowed_users:
+            bot.answer_callback_query(callback_query_id=call.id, text="Извините, вам доступ запрещен.")
+            return
+
+        bot.send_message(call.message.chat.id, 'Введите домашнее задание:')
+        bot.register_next_step_handler(call.message, process_homework_step)
+
+    def process_homework_step(message):
+        with open('dz.txt', 'a') as file:
+            file.write(f"{message.text}\n")
+        send_msg(f"Новое домашнее задание добавил(а): {message.from_user.first_name} /dz - для просмотра\n")
+        #send_msg(f"Добавлено новое домашнее задание! /dz для просмотра\n")
+        #bot.send_message(message.chat.id, 'Домашнее задание успешно добавлено!')
+        #send_msg(f"[INFO] 🎂 Сегодня День Рождения:\n{birthdays[today]}")
+    @bot.callback_query_handler(func=lambda call: call.data == 'view_homework')
+    def handle_show_homework(call):
+        if call.from_user.id not in allowed_users:
+            bot.answer_callback_query(callback_query_id=call.id, text="Извините, вам доступ запрещен.")
+            return
+            bot.send_message(message.chat.id, "Извините, вам доступ запрещен.")
+            return
+        with open('dz.txt', 'r') as file:
+            homework = file.read()
+            numbers = "\n".join([f"{i + 1}. {line}" for i, line in enumerate(homework.splitlines())])
+        #bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{homework}")
+        bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{numbers}")
+
+    @bot.callback_query_handler(func=lambda call: call.data == 'remove_homework')
+    def handle_remove_homework(call):
+        if call.from_user.id not in allowed_users:
+            bot.answer_callback_query(callback_query_id=call.id, text="Извините, вам доступ запрещен.")
+            return
+        with open('dz.txt', 'r') as file:
+            homework = file.read()
+            numbers = "\n".join([f"{i + 1}. {line}" for i, line in enumerate(homework.splitlines())])
+        #bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{homework}")
+        bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{numbers}")
+        bot.send_message(call.message.chat.id, 'Необходимый пункт для удаления:')
+        bot.register_next_step_handler(call.message, process_remove_homework_step)
+        #bot.register_next_step_handler(call.message, process_remove_homework_step)
+
+    def process_remove_homework_step(message):
+        try:
+            line_number = int(message.text) - 1
+            with open("dz.txt", "r") as file:
+                lines = file.readlines()
+            with open("dz.txt", "w") as file:
+                for i, line in enumerate(lines):
+                    if i != line_number:
+                        file.write(line)
+            send_msg(f"Домашняя работа удалена Пользвателем {message.from_user.first_name}\n/dz для просмотра\n")
+            #print(f'Имя: {message.from_user.first_name})
+            #bot.send_message(message.chat.id, 'Домашняя работа успешно удалена!')
+        except:
+            bot.send_message(message.chat.id, 'Вы ввели букву(ы) вместо цифры с необходимым для удаления заданием. Заходите заново в меню и пробуйте /menu')
 
 @bot.callback_query_handler(func=lambda call: call.data == 'add')
 def handle_add_birthday(call):
-    bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 01.01)')
+    if call.from_user.id not in allowed_users:
+        bot.answer_callback_query(callback_query_id=call.id, text="Извините, вам доступ запрещен.")
+        return
+    bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 28.01)')
     bot.register_next_step_handler(call.message, process_birthday_step)
-
-
 def process_birthday_step(message):
     try:
         name, date = message.text.strip().split(' ')
         with open('birthdays.txt', 'a') as file:
-            file.write(f"{name} {date}\n")
-        bot.send_message(message.chat.id, f"День рождения {name} {date} добавлен в список")
+            file.write(f"{name}|{date}\n")
+        send_msg(f"День рождения {name} {date} добавил в список: {message.from_user.first_name}")
+        #bot.send_message(message.chat.id, f"День рождения {name} {date} добавлен в список")
     except ValueError:
-        bot.send_message(message.chat.id, 'Неверный формат, попробуйте еще раз (например: Иван 01.01)')
-
-
+        bot.send_message(message.chat.id, 'Неверный формат, попробуйте еще раз (например: Иван 28.01)')
 @bot.callback_query_handler(func=lambda call: call.data == 'remove')
 def handle_remove_birthday(call):
-    bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 01.01)')
+    if call.from_user.id not in allowed_users:
+        bot.answer_callback_query(callback_query_id=call.id, text="Извините, вам доступ запрещен.")
+        return
+    bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 28.01)')
     bot.register_next_step_handler(call.message, remove_birthday)
 def remove_birthday(message):
     name, date = message.text.strip().split()
     date = datetime.strptime(date, '%d.%m').date()
     with open('birthdays.txt', 'r') as file:
         birthdays = file.readlines()
-    birthdays = [x for x in birthdays if not f'{name} {date.strftime("%d.%m")}\n' == x]
+    birthdays = [x for x in birthdays if not f'{name}|{date.strftime("%d.%m")}\n' == x]
     with open('birthdays.txt', 'w') as file:
         file.writelines(birthdays)
-    bot.send_message(message.chat.id, 'День рождения успешно удален!')
-
+    send_msg(f"День рождения {name} {date.strftime('%d.%m')} удалил: {message.from_user.first_name}")
 @bot.callback_query_handler(func=lambda call: call.data == 'list')
 def handle_show_list(call):
+    if call.from_user.id not in allowed_users:
+        bot.answer_callback_query(callback_query_id=call.id, text="Извините, вам доступ запрещен.")
+        return
     with open('birthdays.txt', 'r') as file:
         birthdays = file.readlines()
     bot.send_message(call.message.chat.id, '\n'.join(birthdays))
 
-@bot.message_handler(commands=['др'])
-def handle_unknown_command(message):
-    bot.reply_to(message, "Меню управления списком ДР.\n\nДобавить пользователя - /добавить Имя 30.01\nУдалить пользователя - /удалить Имя 30.01\nПоказать писок - /список")
-@bot.message_handler(commands=['добавить'])
-def handle_record_birthday(message):
-    try:
-        _, name, date = message.text.split()
-        with open('birthdays.txt', 'a') as file:
-            file.write(f'{name}|{date}\n')
-        bot.reply_to(message, f'Пользователь {name} с датой рождения {date} Успешно добавлен в список на поздравления c др.')
-    except ValueError:
-        bot.reply_to(message, 'Incorrect format. Use /записать name date.')
-
-@bot.message_handler(commands=['удалить'])
-def handle_remove_birthday(message):
-    try:
-        _, name, date = message.text.split()
-        found = False
-        with open('birthdays.txt', 'r') as file:
-            lines = file.readlines()
-        with open('birthdays.txt', 'w') as file:
-            for line in lines:
-                if line.strip() != f'{name}|{date}':
-                    file.write(line)
-                else:
-                    found = True
-        if found:
-            # show the list of users after removing
-                bot.reply_to(message, f'{name} {date} Успешно удален из списка.')
-        else:
-            bot.reply_to(message, f'Birthday for {name} on {date} was not found.')
-    except ValueError:
-        bot.reply_to(message, 'Incorrect format. Use /убрать name date.')
-
-@bot.message_handler(commands=['список'])
+@bot.message_handler(commands=['dz', 'domashka', 'дз','домашка','lp','ljvfirf'])
 def handle_show_birthdays(message):
-    with open('birthdays.txt', 'r') as file:
+    with open('dz.txt', 'r') as file:
         birthdays = file.readlines()
         if birthdays:
             response = ''.join(birthdays)
-            bot.reply_to(message, f'В списке на поздравления:\n{response}')
+            with open('dz.txt', 'r') as file:
+                homework = file.read()
+                numbers = "\n".join([f"{i + 1}. {line}" for i, line in enumerate(homework.splitlines())])
+            # bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{homework}")
+            bot.reply_to(message, f"Хочешь дополнить? /menu \n\nДомашняя работа:\n\n{numbers}")
+            #bot.reply_to(message, f'Хочешь дополнить? /menu \n\nДомашка:\n\n{response}')
         else:
-            bot.reply_to(message, 'No birthdays added.')
-
-
+            bot.reply_to(message, 'Домашки нет.\n\nХочешь добавить? /menu')
 def send_msg(message): # ДР + Пары + schedule
     ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
     for id in ids:
