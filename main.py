@@ -86,7 +86,7 @@ def handle_menu(message):
         return
     keyboard = types.InlineKeyboardMarkup()
 
-    #reklama_button = types.InlineKeyboardButton(text='За баловоство лишаю доступа к этой команде', callback_data='add')
+    #reklama_button = types.InlineKeyboardButton(text='Тест', callback_data='add')
     add_button = types.InlineKeyboardButton(text='Добавить день рождения', callback_data='add')
     remove_button = types.InlineKeyboardButton(text='Удалить день рождения', callback_data='remove')
     list_button = types.InlineKeyboardButton(text='Показать всех именинников', callback_data='list')
