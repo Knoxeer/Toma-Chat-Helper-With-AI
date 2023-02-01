@@ -175,7 +175,7 @@ def process_birthday_step(message):
         name, date = message.text.strip().split(' ')
         with open('birthdays.txt', 'a') as file:
             file.write(f"{name}|{date}\n")
-        send_msg(f"День рождения {name} {date} добавил в список: {message.from_user.first_name}")
+        send_msg(f"День рождения {name} {date} добавил(а) в список: {message.from_user.first_name}")
         #bot.send_message(message.chat.id, f"День рождения {name} {date} добавлен в список")
     except ValueError:
         bot.send_message(message.chat.id, 'Неверный формат, попробуйте еще раз (например: Иван 28.01)')
@@ -194,7 +194,7 @@ def remove_birthday(message):
     birthdays = [x for x in birthdays if not f'{name}|{date.strftime("%d.%m")}\n' == x]
     with open('birthdays.txt', 'w') as file:
         file.writelines(birthdays)
-    send_msg(f"День рождения {name} {date.strftime('%d.%m')} удалил: {message.from_user.first_name}")
+    send_msg(f"День рождения {name} {date.strftime('%d.%m')} удалил(а): {message.from_user.first_name}")
 @bot.callback_query_handler(func=lambda call: call.data == 'list')
 def handle_show_list(call):
     if call.from_user.id not in allowed_users:
@@ -202,7 +202,7 @@ def handle_show_list(call):
         return
     with open('birthdays.txt', 'r') as file:
         birthdays = file.readlines()
-    bot.send_message(call.message.chat.id, '\n'.join(birthdays))
+    bot.send_message(call.message.chat.id, ''.join(birthdays))
 
 @bot.message_handler(commands=['dz', 'domashka', 'дз','домашка','lp','ljvfirf'])
 def handle_show_birthdays(message):
