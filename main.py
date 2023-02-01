@@ -142,11 +142,9 @@ def handle_menu(message):
         with open('dz.txt', 'r') as file:
             homework = file.read()
             numbers = "\n".join([f"{i + 1}. {line}" for i, line in enumerate(homework.splitlines())])
-        #bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{homework}")
         bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{numbers}")
         bot.send_message(call.message.chat.id, 'Необходимый пункт для удаления:')
         bot.register_next_step_handler(call.message, process_remove_homework_step)
-        #bot.register_next_step_handler(call.message, process_remove_homework_step)
 
     def process_remove_homework_step(message):
         try:
@@ -158,8 +156,6 @@ def handle_menu(message):
                     if i != line_number:
                         file.write(line)
             send_msg(f"Домашняя работа удалена Пользвателем {message.from_user.first_name}\n/dz для просмотра\n")
-            #print(f'Имя: {message.from_user.first_name})
-            #bot.send_message(message.chat.id, 'Домашняя работа успешно удалена!')
         except:
             bot.send_message(message.chat.id, 'Вы ввели букву(ы) вместо цифры с необходимым для удаления заданием. Заходите заново в меню и пробуйте /menu')
 
@@ -179,22 +175,33 @@ def process_birthday_step(message):
         #bot.send_message(message.chat.id, f"День рождения {name} {date} добавлен в список")
     except ValueError:
         bot.send_message(message.chat.id, 'Неверный формат, попробуйте еще раз (например: Иван 28.01)')
+
+
 @bot.callback_query_handler(func=lambda call: call.data == 'remove')
 def handle_remove_birthday(call):
     if call.from_user.id not in allowed_users:
         bot.answer_callback_query(callback_query_id=call.id, text="Извините, вам доступ запрещен.")
         return
-    bot.send_message(call.message.chat.id, 'Введите имя и дату рождения через пробел (например: Иван 28.01)')
+    with open('birthdays.txt', 'r') as file:
+        homework = file.read()
+        numbers = "\n".join([f"{i + 1}. {line}" for i, line in enumerate(homework.splitlines())])
+    bot.send_message(call.message.chat.id, f"День рождения:\n\n{numbers}")
+    bot.send_message(call.message.chat.id, 'Необходимый пункт для удаления:')
     bot.register_next_step_handler(call.message, remove_birthday)
 def remove_birthday(message):
-    name, date = message.text.strip().split()
-    date = datetime.strptime(date, '%d.%m').date()
-    with open('birthdays.txt', 'r') as file:
-        birthdays = file.readlines()
-    birthdays = [x for x in birthdays if not f'{name}|{date.strftime("%d.%m")}\n' == x]
-    with open('birthdays.txt', 'w') as file:
-        file.writelines(birthdays)
-    send_msg(f"День рождения {name} {date.strftime('%d.%m')} удалил(а): {message.from_user.first_name}")
+    try:
+        line_number = int(message.text) - 1
+        with open("birthdays.txt", "r") as file:
+            lines = file.readlines()
+        with open("birthdays.txt", "w") as file:
+            for i, line in enumerate(lines):
+                if i != line_number:
+                    file.write(line)
+        name, date = lines[line_number].strip().split("|")
+        date = datetime.strptime(date, '%d.%m').date()
+        send_msg(f"День рождения {name} {date.strftime('%d.%m')} удалил(а): {message.from_user.first_name}")
+    except:
+        send_msg("Ошибка! Пожалуйста, выберите правильный пункт из меню. Заходите заново в меню и пробуйте /menu")
 @bot.callback_query_handler(func=lambda call: call.data == 'list')
 def handle_show_list(call):
     if call.from_user.id not in allowed_users:
@@ -202,7 +209,7 @@ def handle_show_list(call):
         return
     with open('birthdays.txt', 'r') as file:
         birthdays = file.readlines()
-    birthdays = ['{}. {}'.format(i + 1, b) for i, b in enumerate(birthdays)]
+    birthdays = ['{}. {}'.format(i + 1, b.replace('|', ' ')) for i, b in enumerate(birthdays)]
     bot.send_message(call.message.chat.id, ''.join(birthdays))
 
 
@@ -392,13 +399,13 @@ def happybirthday_bot():
     with open("birthdays.txt", "r") as f:
         for line in f:
             name, date = line.strip().split("|")
-            formatted_date = date.zfill(5) # add leading zeros if needed
+            formatted_date = '{:02d}.{:02d}'.format(int(date.split(".")[0]), int(date.split(".")[1]))
             if formatted_date in birthdays:
                 birthdays[formatted_date].append(name)
             else:
                 birthdays[formatted_date] = [name]
     today = time.strftime('%d.%m')
-    formatted_today = today.zfill(5) # add leading zeros if needed
+    formatted_today = '{:02d}.{:02d}'.format(int(today.split(".")[0]), int(today.split(".")[1]))
     if formatted_today in birthdays:
         names = ", ".join(birthdays[formatted_today])
         send_msg(f"[INFO] 🎂 Сегодня День Рождения празднует: {names}")
