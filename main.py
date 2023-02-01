@@ -392,10 +392,14 @@ def happybirthday_bot():
     with open("birthdays.txt", "r") as f:
         for line in f:
             name, date = line.strip().split("|")
-            birthdays[date] = name
+            if date in birthdays:
+                birthdays[date].append(name)
+            else:
+                birthdays[date] = [name]
     today = time.strftime('%d.%m')
     if today in birthdays:
-        send_msg(f"[INFO] 🎂 Сегодня День Рождения празднует: {birthdays[today]}")
+        names = ", ".join(birthdays[today])
+        send_msg(f"[INFO] 🎂 Сегодня День Рождения празднует: {names}")
         send_sticker('CAACAgQAAxkBAAEBo4Zj2pl459Tj2dLyqA4H_k8orzNKlAACFAMAAtkjZCFxGBEXrJo-iC4E')
 def start_mooooooooooooooooooorning_bot():
     r = requests.get('https://sinoptik.ua/погода-варшава')
