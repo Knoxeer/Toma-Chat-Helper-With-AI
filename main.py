@@ -239,17 +239,24 @@ def lalala(message):
                         bot.send_message(message.chat.id, line)  # Send each line back to the user as a separate message
                     except Exception as e:
                         print(e)
-        #    banned_words = []
-        #with open('badwords.ini', 'r') as f:
-        #    banned_words = f.readlines()
-        #banned_words = [word.strip() for word in banned_words]
-        #if any(x in message.text for x in banned_words):
-        #    responses = ['Не материтесь (>_<)', 'Пожалуйста, не используйте такие слова', 'Пожалуйста, будьте вежливы',
-        #                 'Пожалуйста, обращайтесь к другим с уважением', 'Не используйте оскорбительную лексику',
-        #                 'Пожалуйста, будьте уважительны к другим участникам. Мат никому не интересен']
 
-#            response = random.choice(responses)
- #           bot.send_message(message.chat.id, response)
+            banned_words = []
+            with open('badwords.ini', 'r') as f:
+                banned_words = f.readlines()
+            banned_words = [word.strip() for word in banned_words]
+
+            words = message.text.split()
+            for word in words:
+                if word in banned_words:
+                    responses = ['Не материтесь (>_<)', 'Пожалуйста, не используйте такие слова',
+                                 'Пожалуйста, будьте вежливы',
+                                 'Пожалуйста, обращайтесь к другим с уважением',
+                                 'Не используйте оскорбительную лексику',
+                                 'Пожалуйста, будьте уважительны к другим участникам. Мат никому не интересен']
+
+                    response = random.choice(responses)
+                    bot.send_message(message.chat.id, response)
+
         elif message.text.lower() in ('я тебя люблю', 'ты моя любовь', 'это секс', 'секс', 'это любовь'):
             bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEBm9pjxoJdN99yNA3oUGIpjP7EH3S2TgACTgIAAladvQow_mttgTIDby0E')
 
