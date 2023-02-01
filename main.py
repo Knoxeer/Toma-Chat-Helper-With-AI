@@ -392,13 +392,15 @@ def happybirthday_bot():
     with open("birthdays.txt", "r") as f:
         for line in f:
             name, date = line.strip().split("|")
-            if date in birthdays:
-                birthdays[date].append(name)
+            formatted_date = date.zfill(5) # add leading zeros if needed
+            if formatted_date in birthdays:
+                birthdays[formatted_date].append(name)
             else:
-                birthdays[date] = [name]
+                birthdays[formatted_date] = [name]
     today = time.strftime('%d.%m')
-    if today in birthdays:
-        names = ", ".join(birthdays[today])
+    formatted_today = today.zfill(5) # add leading zeros if needed
+    if formatted_today in birthdays:
+        names = ", ".join(birthdays[formatted_today])
         send_msg(f"[INFO] 🎂 Сегодня День Рождения празднует: {names}")
         send_sticker('CAACAgQAAxkBAAEBo4Zj2pl459Tj2dLyqA4H_k8orzNKlAACFAMAAtkjZCFxGBEXrJo-iC4E')
 def start_mooooooooooooooooooorning_bot():
