@@ -202,7 +202,13 @@ def handle_show_list(call):
         return
     with open('birthdays.txt', 'r') as file:
         birthdays = file.readlines()
+    birthdays = ['{}. {}'.format(i + 1, b) for i, b in enumerate(birthdays)]
     bot.send_message(call.message.chat.id, ''.join(birthdays))
+
+
+
+# bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{homework}")
+#bot.send_message(call.message.chat.id, f"Домашняя работа:\n\n{numbers}")
 
 @bot.message_handler(commands=['dz', 'domashka', 'дз','домашка','lp','ljvfirf'])
 def handle_show_birthdays(message):
@@ -222,6 +228,11 @@ def send_msg(message): # ДР + Пары + schedule
     ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
     for id in ids:
         bot.send_message(id, message)
+
+def send_sticker(message): # Sticker happy
+    ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
+    for id in ids:
+        bot.send_sticker(id, message)
 @bot.message_handler(content_types=['text'])
 def lalala(message):
     print(f'Имя: {message.from_user.first_name}Логин: {message.from_user.username} UserID: {message.from_user.id} Написал: {message.text} ChatID: {message.chat.id}')
@@ -384,7 +395,8 @@ def happybirthday_bot():
             birthdays[date] = name
     today = time.strftime('%d.%m')
     if today in birthdays:
-        send_msg(f"[INFO] 🎂 Сегодня День Рождения:\n{birthdays[today]}")
+        send_msg(f"[INFO] 🎂 Сегодня День Рождения празднует: {birthdays[today]}")
+        send_sticker('CAACAgQAAxkBAAEBo4Zj2pl459Tj2dLyqA4H_k8orzNKlAACFAMAAtkjZCFxGBEXrJo-iC4E')
 def start_mooooooooooooooooooorning_bot():
     r = requests.get('https://sinoptik.ua/погода-варшава')
     soup = BS(r.content, 'html.parser')
