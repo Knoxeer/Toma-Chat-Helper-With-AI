@@ -228,9 +228,9 @@ def lalala(message):
     id_chat_config
     for id in id_chat_config:
         if message.from_user.id in allowed_ids:
-            if "Toma" in message.text or "toma" in message.text or "скайнет" in message.text or "Скайнет" in message.text or "ботинок" in message.text or "Ботинок" in message.text or "Тома" in message.text or "тома" in message.text:
+            if "Toma" in message.text or "toma" in message.text or "Тома" in message.text or "тома" in message.text:
                 bot.send_chat_action(message.chat.id, 'typing')
-                message.text = re.sub(r'(Toma|toma|скайнет|Скайнет|ботинок|Ботинок|Тома|тома)', '', message.text)
+                message.text = re.sub(r'(Toma|toma|Тома|тома)', '', message.text)
                 response = openai.Completion.create(model="text-davinci-003", prompt=message.text, max_tokens=1000)
                 full_response = response['choices'][0]['text']  # Use the text property of the first element of the choices list to access the full response
                 lines = full_response.splitlines()  # Split the response into individual lines
