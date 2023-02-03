@@ -66,6 +66,61 @@ allowed_ids = [row[0] for row in cursor.fetchall()]
 cursor.close()
 conn.close()
 
+events = []
+@bot.message_handler(commands=["add"])
+def update(message):
+    with open("schedule.txt", "r") as schedule:
+        for line in schedule:
+            date, time, event = line.strip().split(" ")
+            events.append(event)
+    parts = message.text.split(" ")
+    events_string = "\n".join(events)
+    bot.send_message(chat_id=message.chat.id, text="Уже в списке:\n{}".format(events_string))
+    if len(parts) != 4:
+        bot.send_message(chat_id=message.chat.id, text="Для добавления используйте /update [дата] [время] [название события]")
+        return
+    date, time, event = parts[1], parts[2], parts[3]
+    if event not in events:
+        bot.send_message(chat_id=message.chat.id, text="Доступные пары для добавления:\n{}")
+        return
+    with open("schedule.txt", "a") as schedule:
+        schedule.write("{} {} {}\n".format(date, time, event))
+
+
+@bot.message_handler(commands=["del"])
+def delete_pair(message):
+    events = []
+    with open("schedule.txt", "r") as schedule:
+        for line in schedule:
+            date, time, event = line.strip().split(" ")
+            events.append((date, time, event))
+    parts = message.text.split(" ")
+    if len(parts) != 4:
+        bot.send_message(chat_id=message.chat.id, text="Некорректный формат. Используйте /delete [дата] [время] [название события]")
+        return
+    date, time, event = parts[1], parts[2], parts[3]
+    new_events = [e for e in events if e[2] != event or e[0] != date or e[1] != time]
+    if len(events) == len(new_events):
+        available_events = "\n".join("{} {} {}".format(e[0], e[1], e[2]) for e in events)
+        bot.send_message(chat_id=message.chat.id, text="Ошибка. Доступны для удаления:\n" + available_events)
+        return
+    with open("schedule.txt", "w") as schedule:
+        for e in new_events:
+            schedule.write("{} {} {}\n".format(e[0], e[1], e[2]))
+    bot.send_message(chat_id=message.chat.id, text="Пара удалена!")
+
+@bot.message_handler(commands=["show"])
+def show_pairs(message):
+    events = []
+    with open("schedule.txt", "r") as schedule:
+        for line in schedule:
+            date, time, event = line.strip().split(" ")
+            events.append("{} {} {}".format(date, time, event))
+    if not events:
+        bot.send_message(chat_id=message.chat.id, text="Расписание пустое.")
+        return
+    bot.send_message(chat_id=message.chat.id, text="\n".join(events))
+
 def add_to_file(file_name, date, name):
     with open(file_name, 'a') as file:
         file.write(f"{date}|{name}\n")
@@ -432,12 +487,39 @@ def five_minutes_before_start_bot():
 def end_para_bot():
     messages = ["🔔 Пара только что закончилась!", "🔔 Пара закончилась!", "🔔 Эта пара только что завершилась!", "🔔 Пара завершена!", "🔔 Занятие закончено!", "🔔 Пара завершилась, спасибо за внимание!"]
     send_msg(random.choice(messages))
+
+    from telegram import ParseMode
+
+def read_config():
+    config = configparser.ConfigParser()
+    config.read("settings.ini")
+    ids = [int(x) for x in config['Telegram']['id_chat'].split(',')]
+    return ids
+def send_message(ids, message):
+    for id in ids: bot.send_message(id, message, disable_web_page_preview=True, parse_mode='MarkdownV2')
+def osnov_ekonomiki(): send_message(read_config(), '🔔 Пара только что началась\nПрепод: Анна Митрофанова\n[Присоединиться на занятие](https://teams.microsoft.com/l/channel/19%3AlO4ItUsvKTB0F9NWeGXKngEzAJtwJOJ0OwMoZwp2VbY1%40thread.tacv2/General?groupId=b25d40bb-5009-4e0e-b887-5a5fdbf32623&tenantId=51c857e6-1af0-4e29-9cc5-d1ce22a6c40a)')
+def upr_4el_res_v_it_proektax(): send_message(read_config(), '🔔 Пара только что началась\nПрепод: Людмила Просандеева\n[Присоединиться на занятие](https://teams.microsoft.com/l/team/19%3Ax_1sEjmEw82Nn49e5k8hU2YwNmxZqkRYmE6DHWyqzCs1%40thread.tacv2/conversations?groupId=0c45f899-6074-42ac-ab26-a2c940c725e1&tenantId=51c857e6-1af0-4e29-9cc5-d1ce22a6c40a)')
+def mat_anal_i_len_algebra(): send_message(read_config(), '🔔 Пара только что началась\nПрепод: Тадеуш Милош\n[Присоединиться на занятие](https://teams.microsoft.com/l/channel/19%3AqXpzKrPTI6XPbovNBYfxz-uFl356BCB18UkrLn6YVNQ1%40thread.tacv2/General?groupId=865116f1-b6a7-4bab-877d-a48131ffa3a4&tenantId=51c857e6-1af0-4e29-9cc5-d1ce22a6c40a)')
+def osnov_elektrotex_i_elektroniki(): send_message(read_config(), '🔔 Пара только что началась\nПрепод: Сергей Хрипко\n[Присоединиться на занятие](https://teams.microsoft.com/l/channel/19%3AP_sRdElhN8JKtVooxP3GJbOH251OJnz9WFQcK-rjpLs1%40thread.tacv2/General?groupId=fcf31202-1783-4655-8b61-344d57538681&tenantId=51c857e6-1af0-4e29-9cc5-d1ce22a6c40a)')
+def architectura_komp_sistem(): send_message(read_config(), '🔔 Пара только что началась 🤬\nПрепод: Елена Майборода\n[Присоединиться на занятие](https://teams.microsoft.com/l/channel/19%3AcjSxS_co-70apmCUMKtVZS6HXamubKqj5-STXpBAFVA1%40thread.tacv2/General?groupId=54b914fe-1e98-4535-9bc6-43a70c8fc220&tenantId=51c857e6-1af0-4e29-9cc5-d1ce22a6c40a)')
+def metodol_isledov_v_texnich_naykax(): send_message(read_config(), '🔔 Пара только что началась\nПрепод: Юлия Барачевская\n[Присоединиться на занятие](https://teams.microsoft.com/l/channel/19%3ASlGhWWD6V3HKgmgxx7-J-PyBAt1v5gtGk6kB1xwoC5E1%40thread.tacv2/General?groupId=76002d29-662d-4f31-bd0e-b55c4de5aa5f&tenantId=51c857e6-1af0-4e29-9cc5-d1ce22a6c40a)')
+def osnovi_komp_setey(): send_message(read_config(), '🔔 Пара только что началась 🤬\nПрепод: Елена Майборода\n[Присоединиться на занятие](https://teams.microsoft.com/l/channel/19%3AOB2-LJ4tL_co3dS9cO3qAqfRf-EMT7bt25mGq5MgmJ41%40thread.tacv2/General?groupId=5ad78fc4-3d67-452c-a2e1-7f2a40a29f45&tenantId=51c857e6-1af0-4e29-9cc5-d1ce22a6c40a)')
+
+import datetime
+
 def ched():
     with open("schedule.txt", "r") as file:
         lines = file.readlines()
+    tasks = []
     for line in lines:
-        day, time, task = line.strip().split()
-        schedule.every().__getattribute__(day).at(time).do(eval(task))
+        date_str, time, task = line.strip().split()
+        current_year = datetime.datetime.now().year
+        date = datetime.datetime.strptime(f"{current_year}-{date_str.replace('.', '-')}", "%Y-%d-%m")
+        if date <= datetime.datetime.now():
+            tasks.append({"date": date, "time": time, "task": task})
+    tasks = sorted(tasks, key=lambda x: (x["date"], x["time"]))
+    for task in tasks:
+        schedule.every().day.at(task["time"]).do(eval(task["task"])).tag(f"{task['date'].strftime('%d.%m.%Y')}_{task['time']}")
 
     while True:
         schedule.run_pending()
